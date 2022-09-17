@@ -5,6 +5,10 @@ using MediatR.Pipeline;
 using Module = Autofac.Module;
 using Microsoft.Extensions.Configuration;
 using System.Diagnostics.CodeAnalysis;
+using AtmiraAPI.Core.Interfaces.Settings;
+using AtmiraAPI.Infrastructure.Clients;
+using AtmiraAPI.Core.Interfaces.Services;
+using AtmiraAPI.Core.Constant;
 
 namespace AtmiraAPI.Infrastructure;
 
@@ -36,6 +40,16 @@ public class DefaultInfrastructureModule : Module
 
   private void RegisterCommonDependencies(ContainerBuilder builder)
   {
+
+    var nasaAPISettings = _configuration.BindSettings<NasaAPISettings>(SettingsConstants.NasaAPISettings);
+
+    builder.RegisterInstance(nasaAPISettings)
+      .As<INasaAPISettings>()
+      .SingleInstance();
+
+    builder.RegisterType<NasaClient>()
+      .As<INasaClient>()
+      .SingleInstance();
 
     builder
         .RegisterType<Mediator>()
