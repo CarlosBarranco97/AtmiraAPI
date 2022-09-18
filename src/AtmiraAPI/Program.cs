@@ -25,7 +25,7 @@ builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Con
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.WebHost.UseUrls("https://+");
+builder.WebHost.UseUrls("http://+");
 
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
