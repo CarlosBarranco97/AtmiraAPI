@@ -24,6 +24,5 @@
   <ItemGroup>
     <Folder Include="Clients\" />
     <Folder Include="Data\" />
-    <Folder Include="Settings\" />
   </ItemGroup>
 </Project>

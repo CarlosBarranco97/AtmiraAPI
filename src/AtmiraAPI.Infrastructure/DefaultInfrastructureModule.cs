@@ -9,6 +9,7 @@ using AtmiraAPI.Core.Interfaces.Settings;
 using AtmiraAPI.Infrastructure.Clients;
 using AtmiraAPI.Core.Interfaces.Services;
 using AtmiraAPI.Core.Constant;
+using AtmiraAPI.Infrastructure.Settings;
 
 namespace AtmiraAPI.Infrastructure;
 
