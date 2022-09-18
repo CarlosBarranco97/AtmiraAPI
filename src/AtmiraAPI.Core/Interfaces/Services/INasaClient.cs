@@ -9,5 +9,5 @@ using AtmiraAPI.SharedKernel;
 namespace AtmiraAPI.Core.Interfaces.Services;
 public interface INasaClient
 {
-  Task<ModelOrError<NasaResponse>> GetAsteroidsData(string planet);
+  Task<ModelOrError<NasaResponse>> GetAsteroidsData();
 }

@@ -19,13 +19,21 @@ public class AsteroidService : IAsteroidService
   public async Task<ModelOrError<List<AsteroidResponse>>> GetAsteroidFromPlanet(string planet)
   {
     var modelOrError = new ModelOrError<List<AsteroidResponse>>();
-    var response = await _nasaClient.GetAsteroidsData(planet);
+    
+    if (string.IsNullOrEmpty(planet))
+    {
+      modelOrError.Error = "Planet cannot be null";
+      return modelOrError;
+    }
+
+    var response = await _nasaClient.GetAsteroidsData();
+
     if (!string.IsNullOrEmpty(response.Error))
     {
       modelOrError.Error = response.Error;
       return modelOrError;
     }
-    else if (response?.Model?.NearEarthObjects?.Values == null)
+    else if (response?.Model?.NearEarthObjects?.Values == null || response?.Model?.NearEarthObjects?.Values.Count == 0)
       return modelOrError;
 
     var listAsteroids = FilterAsteroids(planet, response?.Model?.NearEarthObjects?.Values?.ToList());
@@ -67,10 +75,10 @@ public class AsteroidService : IAsteroidService
       model.Add(new AsteroidResponse()
       {
         Name = asteroid.Name,
-        Date = asteroid.CloseApproachData.FirstOrDefault().CloseApproachDate,
+        Date = asteroid.CloseApproachData.FirstOrDefault()?.CloseApproachDate ?? new DateTimeOffset(),
         Diameter = (asteroid.EstimatedDiameter.Kilometers.MinDiamater + asteroid.EstimatedDiameter.Kilometers.MaxDiamater) / 2,
-        Planet = asteroid.CloseApproachData.FirstOrDefault().OrbitingBody,
-        Velocity = asteroid.CloseApproachData.FirstOrDefault().RelativeVelocity.KilometersPerHour
+        Planet = asteroid.CloseApproachData.FirstOrDefault()?.OrbitingBody,
+        Velocity = asteroid.CloseApproachData.FirstOrDefault()?.RelativeVelocity?.KilometersPerHour
       });
     }
 

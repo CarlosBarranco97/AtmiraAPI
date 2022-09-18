@@ -24,7 +24,7 @@ public class NasaClient : INasaClient
     };
   }
 
-  public async Task<ModelOrError<NasaResponse>> GetAsteroidsData(string planet)
+  public async Task<ModelOrError<NasaResponse>> GetAsteroidsData()
   {
     var modelOrError = new ModelOrError<NasaResponse>();
     var today = DateTime.Now.ToString("yyyy-MM-dd");
