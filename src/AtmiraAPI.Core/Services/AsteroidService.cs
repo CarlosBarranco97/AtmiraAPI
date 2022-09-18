@@ -34,19 +34,26 @@ public class AsteroidService : IAsteroidService
       return modelOrError;
     }
     else if (response?.Model?.NearEarthObjects?.Values == null || response?.Model?.NearEarthObjects?.Values.Count == 0)
+    {
+      modelOrError.Model = new List<AsteroidResponse>();
       return modelOrError;
+    }
+      
 
     var listAsteroids = FilterAsteroids(planet, response?.Model?.NearEarthObjects?.Values?.ToList());
 
     if (listAsteroids.Count == 0)
+    {
+      modelOrError.Model = new List<AsteroidResponse>();
       return modelOrError;
+    }
 
     modelOrError.Model = GenerateResponse(listAsteroids);
 
     return modelOrError;
   }
 
-  private List<NearEarthObject> FilterAsteroids(string planet, List<NearEarthObject[]> model)
+  public static List<NearEarthObject> FilterAsteroids(string planet, List<NearEarthObject[]> model)
   {
     var listAsteroids = new List<NearEarthObject>();
     foreach (var nearEarthObject in model)
@@ -54,7 +61,7 @@ public class AsteroidService : IAsteroidService
       foreach (var asteroid in nearEarthObject)
       {
         if (asteroid != null &&
-          asteroid.CloseApproachData?.FirstOrDefault()?.OrbitingBody.ToLower() == planet &&
+          asteroid.CloseApproachData?.FirstOrDefault()?.OrbitingBody.ToLower() == planet.ToLower() &&
           asteroid.IsPotentiallyHazardousAsteroid)
         {
           listAsteroids.Add(asteroid);
@@ -67,22 +74,17 @@ public class AsteroidService : IAsteroidService
       .Take(3).ToList() : listAsteroids;
   }
 
-  private static List<AsteroidResponse> GenerateResponse(List<NearEarthObject> listAsteroids)
+  public static List<AsteroidResponse> GenerateResponse(List<NearEarthObject> listAsteroids)
   {
-    var model = new List<AsteroidResponse>();
-    foreach (var asteroid in listAsteroids)
+    return listAsteroids.Select(x => new AsteroidResponse()
     {
-      model.Add(new AsteroidResponse()
-      {
-        Name = asteroid.Name,
-        Date = asteroid.CloseApproachData.FirstOrDefault()?.CloseApproachDate ?? new DateTimeOffset(),
-        Diameter = (asteroid.EstimatedDiameter.Kilometers.MinDiamater + asteroid.EstimatedDiameter.Kilometers.MaxDiamater) / 2,
-        Planet = asteroid.CloseApproachData.FirstOrDefault()?.OrbitingBody,
-        Velocity = asteroid.CloseApproachData.FirstOrDefault()?.RelativeVelocity?.KilometersPerHour
-      });
-    }
+      Name = x.Name,
+      Date = x.CloseApproachData.FirstOrDefault()?.CloseApproachDate ?? new DateTimeOffset(),
+      Diameter = (x.EstimatedDiameter.Kilometers.MinDiamater + x.EstimatedDiameter.Kilometers.MaxDiamater) / 2,
+      Planet = x.CloseApproachData.FirstOrDefault()?.OrbitingBody,
+      Velocity = x.CloseApproachData.FirstOrDefault()?.RelativeVelocity?.KilometersPerHour
+    }).ToList(); 
 
-    return model;
   }
 
 }
