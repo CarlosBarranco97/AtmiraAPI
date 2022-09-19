@@ -8,11 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
     <PackageReference Include="NETStandard.Library" />
   </ItemGroup>
   
